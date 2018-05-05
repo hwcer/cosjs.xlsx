@@ -1,0 +1,37 @@
+{
+  "name": "cosjs.xlsx",
+  "description": "xlsx",
+  "version": "0.0.1",
+  "main": "./index.js",
+  "author": {
+    "name": "wanchao.huang",
+    "email": "hwclegend@163.com"
+  },
+  "keywords": [
+    "game",
+    "xlsx"
+  ],
+  "licenses": [
+    {
+      "type": "Apache License, Version 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "dependencies": {
+    "xlsx": "*"
+  },
+  "engines": {
+    "node": "4.0+"
+  },
+  "directories": {
+    "lib": "./lib/"
+  },
+  "repository": {
+    "type": "https",
+    "url": "https://github.com/hwclegend/cosjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hwclegend/cosjs/issues"
+  },
+  "homepage": "https://github.com/hwclegend/cosjs"
+}
