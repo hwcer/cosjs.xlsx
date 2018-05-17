@@ -1,7 +1,7 @@
 {
   "name": "cosjs.xlsx",
   "description": "xlsx",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "./index.js",
   "author": {
     "name": "wanchao.huang",
@@ -18,7 +18,8 @@
     }
   ],
   "dependencies": {
-    "xlsx": "*"
+    "xlsx": "*",
+    "cosjs.loader": "*"
   },
   "engines": {
     "node": "4.0+"
