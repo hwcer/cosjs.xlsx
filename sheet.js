@@ -3,9 +3,13 @@ const FS = "\t\r";
 const XLSX  = require('xlsx');
 
 function file_parse_xlsx(path,callback){
-    var workbook = XLSX.readFile(path);
+    let workbook = XLSX.readFile(path);
     workbook.SheetNames.forEach(function(sheetName) {
-        var json = sheet_parse_json(workbook.Sheets[sheetName]);
+        let json = sheet_parse_json(workbook.Sheets[sheetName]);
+        if(!json){
+            console.log("Sheets Error",sheetName,path);
+            json = {};
+        }
         callback(json.name,json.rows);
     });
 }
@@ -15,7 +19,9 @@ function sheet_parse_json(sheet){
     var sheet_data = XLSX.utils.sheet_to_csv(sheet,{"RS":RS,"FS":FS});
 
     var body = sheet_data.split(RS);
-
+    if(body.length <4){
+        return false;
+    }
     var fname = body.shift().split(FS);
     var ftype = body.shift().split(FS);
     var fkeys = body.shift().split(FS);

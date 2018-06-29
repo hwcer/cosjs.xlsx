@@ -16,6 +16,9 @@ exports = module.exports = function (xlsx,json) {
 
 
 function writeFile(root,fname,sname,json){
+    if(!sname || !json){
+        return;
+    }
     let file,dir = (fname && fname!=="/") ? fname : "";
     mkdir(root,dir);
     if(!dir){
