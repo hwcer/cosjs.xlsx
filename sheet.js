@@ -16,28 +16,28 @@ function file_parse_xlsx(path,callback){
 
 
 function sheet_parse_json(sheet){
-    var sheet_data = XLSX.utils.sheet_to_csv(sheet,{"RS":RS,"FS":FS});
+    let sheet_data = XLSX.utils.sheet_to_csv(sheet,{"RS":RS,"FS":FS});
 
-    var body = sheet_data.split(RS);
+    let body = sheet_data.split(RS);
     if(body.length <4){
         return false;
     }
-    var fname = body.shift().split(FS);
-    var ftype = body.shift().split(FS);
-    var fkeys = body.shift().split(FS);
-    var ftext = body.shift();
+    let fname = body.shift().split(FS);
+    let ftype = body.shift().split(FS);
+    let fkeys = body.shift().split(FS);
+    let ftext = body.shift();
 
-    var fileName = fname[0];
-    var fileType = fname[1]|| "json";
-    var fileKeys = sheet_get_fields(fkeys);
+    let fileName = fname[0];
+    let fileType = fname[1]|| "json";
+    let fileKeys = sheet_get_fields(fkeys);
 
-    var data = {};
-    for(var v of body){
-        var val = sheet_fields_value(fileKeys,ftype,v.split(FS));
-        var id = val["id"];
-        if(!id){
+    let data = {};
+    for(let v of body){
+        let val = sheet_fields_value(fileKeys,ftype,v.split(FS));
+        if(!("id" in val)){
             continue;
         }
+        let id = val["id"];
         if(fileType =="json"){
             data[id] = val;
         }
@@ -55,8 +55,8 @@ function sheet_parse_json(sheet){
 }
 
 function sheet_fields_value(f,t,arr){
-    var d = {};
-    for(var k in f){
+    let d = {};
+    for(let k in f){
         d[k] = sheet_get_object(f[k],t,arr);
     }
     return d;
@@ -67,7 +67,7 @@ function sheet_get_object(i,t,arr){
     if(typeof i !="object"){
         return sheet_get_value(i,t,arr);
     }
-    var v;
+    let v;
     if(Array.isArray(i)){
         v= [];
         for(var ii of i){
@@ -76,7 +76,7 @@ function sheet_get_object(i,t,arr){
     }
     else{
         v={};
-        for(var ki in i){
+        for(let ki in i){
             v[ki] =sheet_get_object(i[ki],t,arr)
         }
     }
@@ -101,13 +101,13 @@ function sheet_get_value(i,t,arr){
 
 
 function sheet_get_fields(arr){
-    var fields = {},cache1=null,cache2=null,dep=0;
-    for(var i=0;i<arr.length;i++){
-        var k = arr[i];
+    let fields = {},cache1=null,cache2=null,dep=0;
+    for(let i=0;i<arr.length;i++){
+        let k = arr[i];
         if(k.indexOf("[{") >=0){
             dep =2;
             cache1 = [],cache2={};
-            var ak = k.split("[{");
+            let ak = k.split("[{");
             fields[ak[0]] = cache1;
             cache2[ak[1]] = i;
             cache1.push(cache2);
@@ -115,14 +115,14 @@ function sheet_get_fields(arr){
         else if(k.indexOf("[[") >=0){
             dep =2;
             cache1 = [],cache2=[];
-            var ak = k.split("[[");
+            let ak = k.split("[[");
             fields[ak[0]] = cache1;
             cache2.push(i)
             cache1.push(cache2);
         }
         else if(k.indexOf("[") >=0){
             if(!dep) dep =1;
-            var ak = k.split("[");
+            let ak = k.split("[");
             if(!cache1 || !cache2){
                 cache1 = [];
                 fields[ak[0]] = cache1;
@@ -132,29 +132,29 @@ function sheet_get_fields(arr){
         }
         else if(k.indexOf("{") >=0){
             if(!dep) dep =1;
-            var ak = k.split("{");
+            let ak = k.split("{");
             if(!cache1 || !cache2){
                 cache1 = {};
                 fields[ak[0]] = cache1;
             }
-            var ak2 = ak[1];
+            let ak2 = ak[1];
             if(cache2) cache2[ak2] = i;
             else if (cache1) cache1[ak2] = i;
         }
         else if(k.indexOf("}]") >=0){
             dep =0;
-            var ak = k.split("}]");
+            let ak = k.split("}]");
             cache2[ak[0]] = i;
             cache1=null,cache2=null;
         }
         else if(k.indexOf("]]") >=0){
             dep =0;
-            var ak = k.split("]]");
+            let ak = k.split("]]");
             cache2.push(i);
             cache1=null,cache2=null;
         }
         else if(k.indexOf("]") >=0){
-            var ak = k.split("]");
+            let ak = k.split("]");
             if(dep>=2){
                 cache2.push(i);
                 cache2=[];
@@ -168,7 +168,7 @@ function sheet_get_fields(arr){
             }
         }
         else if(k.indexOf("}") >=0){
-            var ak = k.split("}");
+            let ak = k.split("}");
             if(dep==2){
                 cache2[ak[0]] = i;
                 cache2={};
