@@ -30,9 +30,11 @@ function sheet_parse_json(sheet){
     let fileName = fname[0];
     let fileType = fname[1]|| "json";
     let fileKeys = sheet_get_fields(fkeys);
-
     let data = {};
     for(let v of body){
+        if(!v){
+            continue;
+        }
         let val = sheet_fields_value(fileKeys,ftype,v.split(FS));
         if(!("id" in val)){
             continue;

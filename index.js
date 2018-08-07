@@ -6,7 +6,7 @@ const cosjs_loader = require("cosjs.loader");
 
 
 exports = module.exports = function (xlsx,json) {
-    let loader = cosjs_loader(xlsx,['.xls','.xlsx']);
+    let loader = cosjs_loader(xlsx,false,['.xls','.xlsx']);
     loader.forEach((k,p)=>{
         let f = path.dirname(k);
         sheet(p,writeFile.bind(null,json,f));
