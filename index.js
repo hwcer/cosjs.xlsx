@@ -2,6 +2,7 @@
 const fs = require("fs");
 const path = require("path");
 const sheet = require("./sheet");
+const cosjs_files = require("cosjs.files");
 const cosjs_loader = require("cosjs.loader");
 
 
@@ -20,7 +21,7 @@ function writeFile(root,fname,sname,json){
         return;
     }
     let file,dir = (fname && fname!=="/") ? fname : "";
-    mkdir(root,dir);
+    cosjs_files.mkdir(root,dir);
     if(!dir){
         file = '/' + sname + ".json"
     }
@@ -32,19 +33,4 @@ function writeFile(root,fname,sname,json){
         if (err) throw err;
         console.log("writeFile:",file);
     });
-}
-
-
-function mkdir(root,dir){
-    if(!dir) return;
-    let arr = dir.split("/");
-    let p = [root];
-    for(let v of arr){
-        if(!v) continue;
-        p.push(v);
-        let f= p.join("/");
-        if(!fs.existsSync(f)){
-            fs.mkdirSync(f);
-        }
-    }
 }

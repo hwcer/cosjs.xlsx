@@ -1,7 +1,7 @@
 {
   "name": "cosjs.xlsx",
   "description": "xlsx",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "./index.js",
   "author": {
     "name": "wanchao.huang",
@@ -19,6 +19,7 @@
   ],
   "dependencies": {
     "xlsx": "*",
+    "cosjs.files": "*",
     "cosjs.loader": "*"
   },
   "engines": {
@@ -29,10 +30,10 @@
   },
   "repository": {
     "type": "https",
-    "url": "https://github.com/hwclegend/cosjs.git"
+    "url": "https://github.com/hwclegend/cosjs.xlsx.git"
   },
   "bugs": {
-    "url": "https://github.com/hwclegend/cosjs/issues"
+    "url": "https://github.com/hwclegend/cosjs.xlsx/issues"
   },
-  "homepage": "https://github.com/hwclegend/cosjs"
+  "homepage": "https://github.com/hwclegend/cosjs.xlsx"
 }

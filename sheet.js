@@ -1,5 +1,3 @@
-const RS = "\t\n";
-const FS = "\t\r";
 const XLSX  = require('xlsx');
 
 function file_parse_xlsx(path,callback){
@@ -14,29 +12,33 @@ function file_parse_xlsx(path,callback){
     });
 }
 
+if(typeof exports !== 'undefined'){
+    exports = module.exports = file_parse_xlsx;
+}
 
 function sheet_parse_json(sheet){
-    let sheet_data = XLSX.utils.sheet_to_csv(sheet,{"RS":RS,"FS":FS});
 
-    let body = sheet_data.split(RS);
-    if(body.length <4){
+    //let sheet_data = XLSX.utils.sheet_to_csv(sheet,{"RS":RS,"FS":FS});
+    let sheet_data =  XLSX.utils.sheet_to_json(sheet, {header:1});
+    if(sheet_data.length <4){
         return false;
     }
-    let fname = body.shift().split(FS);
-    let ftype = body.shift().split(FS);
-    let fkeys = body.shift().split(FS);
-    let ftext = body.shift();
+    let fname = sheet_data.shift();
+    let ftype = sheet_data.shift();
+    let fkeys = sheet_data.shift();
+    let ftext = sheet_data.shift();
 
     let fileName = fname[0];
     let fileType = fname[1]|| "json";
     let fileKeys = sheet_get_fields(fkeys);
+
     let data = {};
-    for(let v of body){
+    for(let v of sheet_data){
         if(!v){
             continue;
         }
-        let val = sheet_fields_value(fileKeys,ftype,v.split(FS));
-        if(!("id" in val)){
+        let val = sheet_fields_value(fileKeys,ftype,v);
+        if( !val || !("id" in val)){
             continue;
         }
         let id = val["id"];
@@ -45,9 +47,9 @@ function sheet_parse_json(sheet){
         }
         else if(fileType =="array"){
             if(!data[id]) {
-                data[id]={"id":id,"name":val["name"]||"","rows":[]};
+                data[id]=[];
             }
-            data[id]["rows"].push(val);
+            data[id].push(val);
         }
         else if(fileType =="kv"){
             data[id] = val["val"]||"";
@@ -57,6 +59,10 @@ function sheet_parse_json(sheet){
 }
 
 function sheet_fields_value(f,t,arr){
+    //检查是不是空行
+    if(arr.length === 0 || (!arr[0] && typeof arr[0] !== 'number' ) ){
+        return false;
+    }
     let d = {};
     for(let k in f){
         d[k] = sheet_get_object(f[k],t,arr);
@@ -106,6 +112,10 @@ function sheet_get_fields(arr){
     let fields = {},cache1=null,cache2=null,dep=0;
     for(let i=0;i<arr.length;i++){
         let k = arr[i];
+        if(!k){
+            continue;
+        }
+        k = k.replace(/<[^>]+>/g,"");
         if(k.indexOf("[{") >=0){
             dep =2;
             cache1 = [],cache2={};
@@ -195,6 +205,3 @@ function sheet_get_fields(arr){
 }
 
 
-if(typeof exports !== 'undefined'){
-    exports = module.exports = file_parse_xlsx;
-}
